@@ -1,0 +1,31 @@
+# Nuxt build output
+.nuxt
+dist
+
+# Node modules
+node_modules
+
+# Logs
+*.log
+
+# Package manager files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Cache directories
+.cache
+.output
+
+# Environment variables
+.env
+.env.*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
