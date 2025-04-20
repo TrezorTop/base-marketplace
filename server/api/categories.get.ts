@@ -1,13 +1,6 @@
 import { createError, defineEventHandler } from "h3";
 import db from "~/server/utils/db";
-
-export type Category = {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  name: string;
-  title: string;
-};
+import type { Category } from "~/server/utils/types";
 
 export type CategoriesResponse = {
   categories: Category[];

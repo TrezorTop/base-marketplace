@@ -36,17 +36,6 @@ const applyPriceFilter = () => {
   productsStore.setPriceRange(minPrice.value, maxPrice.value);
 };
 
-// Get traits for selected categories only when categories are selected
-const visibleTraits = computed(() => {
-  if (categoriesStore.selectedCategories.length === 0) {
-    return []; // Return empty array when no categories selected
-  }
-
-  return productsStore.traits.filter(categoryTrait =>
-    categoriesStore.selectedCategories.includes(categoryTrait.category.name),
-  );
-});
-
 // Get selected values for a trait
 const getSelectedValues = (categoryId: string, traitName: string) => {
   const trait = productsStore.selectedTraits.find(
@@ -83,7 +72,6 @@ const handleTraitValueChange = (categoryId: string, traitName: string, values: s
 
 <template>
   <div>
-    <!-- Price filter -->
     <div class="mb-6">
       <h3 class="text-lg font-medium mb-2">Price Range</h3>
       <div class="flex items-center gap-2">
@@ -94,9 +82,12 @@ const handleTraitValueChange = (categoryId: string, traitName: string, values: s
       </div>
     </div>
 
-    <!-- Traits filters - only shown when categories are selected -->
-    <div v-if="categoriesStore.selectedCategories.length > 0">
-      <div v-for="categoryTrait in visibleTraits" :key="categoryTrait.category.id" class="mb-6">
+    <template v-if="productsStore.traits.length">
+      <div
+        v-for="categoryTrait in productsStore.traits"
+        :key="categoryTrait.category.id"
+        class="mb-6"
+      >
         <h3 class="text-lg font-medium mb-2">{{ categoryTrait.category.title }}</h3>
 
         <div class="flex flex-wrap gap-3">
@@ -115,9 +106,9 @@ const handleTraitValueChange = (categoryId: string, traitName: string, values: s
           </div>
         </div>
       </div>
-    </div>
+    </template>
 
-    <!-- Message when no categories are selected -->
+
     <div v-else class="mb-6 text-gray-500">
       Please select at least one category to see available traits.
     </div>

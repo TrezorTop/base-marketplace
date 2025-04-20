@@ -1,6 +1,9 @@
-import type { Product, ProductsFilter, ProductsResponse } from "~/server/api/products.post";
+import type { ProductsFilter, ProductsResponse } from "~/server/api/products.post";
 import type { CategoryTrait, TraitsResponse } from "~/server/api/products/traits/index.post";
 import { useCategoriesStore } from "~/stores/categories.store";
+import { type Product, type ProductDetails } from "~/server/utils/types";
+import type { FeaturedProductsResponse } from "~/server/api/products/featured/index.get";
+import type { ProductResponse } from "~/server/api/products/[id]/index.get";
 
 export const useProductsStore = defineStore("products", () => {
   const products = ref<Product[]>([]);
@@ -136,6 +139,26 @@ export const useProductsStore = defineStore("products", () => {
     await getProducts({ page });
   };
 
+  const featuredProducts = ref<Product[]>([]);
+
+  const getFeaturedProducts = async () => {
+    const response = await api<FeaturedProductsResponse>("/api/products/featured");
+
+    featuredProducts.value = response.products;
+
+    return response;
+  };
+
+  const currentProduct = ref<ProductDetails | null>(null);
+
+  const getProductById = async (id: string) => {
+    const response = await api<ProductResponse>(`/api/products/${id}`);
+
+    currentProduct.value = response.product;
+
+    return response;
+  };
+
   return {
     products,
     getProducts,
@@ -153,5 +176,11 @@ export const useProductsStore = defineStore("products", () => {
     totalProducts,
     itemsPerPage,
     setPage,
+
+    featuredProducts,
+    getFeaturedProducts,
+
+    currentProduct,
+    getProductById,
   };
 });

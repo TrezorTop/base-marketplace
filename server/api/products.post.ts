@@ -1,17 +1,7 @@
 import { createError, defineEventHandler, readBody } from "h3";
 import db from "~/server/utils/db";
 import { Prisma } from "~/prisma/generated/prisma";
-
-export type Product = {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  name: string;
-  description: string;
-  price: number;
-  categoryId: string;
-  traits: Prisma.JsonValue;
-};
+import type { Product } from "~/server/utils/types";
 
 export type ProductsResponse = {
   products: Product[];
@@ -31,7 +21,7 @@ export type ProductsFilter = {
   }[];
   sort?: {
     field: string;
-    direction: 'asc' | 'desc';
+    direction: "asc" | "desc";
   };
   page?: number;
   limit?: number;
@@ -78,7 +68,7 @@ export default defineEventHandler(async (event): Promise<ProductsResponse> => {
           // Create a filter for each possible trait value (OR condition)
           const valueFilters = trait.values.map(value => ({
             traits: {
-              path: [trait.name],
+              path: [trait.name, "value"],
               equals: value,
             },
           }));
@@ -102,7 +92,7 @@ export default defineEventHandler(async (event): Promise<ProductsResponse> => {
     if (filter.sort) {
       // Create a dynamic orderBy object based on the field and direction
       orderBy = {
-        [filter.sort.field]: filter.sort.direction
+        [filter.sort.field]: filter.sort.direction,
       };
     }
 

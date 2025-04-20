@@ -1,13 +1,6 @@
 import { createError, defineEventHandler, readBody } from "h3";
 import db from "~/server/utils/db";
-
-export type TraitValue = string[];
-
-export type Trait = {
-  name: string;
-  title: string;
-  values: TraitValue;
-};
+import type { Trait, TraitDetails } from "~/server/utils/types";
 
 export type CategoryTrait = {
   category: {
@@ -62,6 +55,7 @@ export default defineEventHandler(async (event): Promise<TraitsResponse> => {
       },
     });
 
+    // If no categories are found, this will be an empty array
     const response = categories.map(category => {
       // Create a map to store trait titles by name for quick lookup
       const traitTitleMap = new Map<string, string>();
@@ -70,22 +64,32 @@ export default defineEventHandler(async (event): Promise<TraitsResponse> => {
       });
 
       // Get unique trait names for this category
+      // If a category has no traits, this will be an empty array
       const traitNames = [...new Set(category.traits.map(trait => trait.name))];
 
       // Build traits array for this category
       const traitsArray = traitNames.map(traitName => {
         // Extract all values for this trait from products
         const values = category.products
-          .map(product => (product.traits as Record<string, string>)[traitName])
+          .map(product => {
+            try {
+              const traits = product.traits as Record<string, TraitDetails>;
+              const traitDetail = traits[traitName];
+              return traitDetail ? traitDetail.value : undefined;
+            } catch (error) {
+              console.error(`Error processing trait ${traitName} for product:`, error);
+              return undefined;
+            }
+          })
           .filter(Boolean); // Filter out undefined/null values
 
         // Store unique, sorted values
-        const uniqueValues = [...new Set(values)].sort();
+        const uniqueValues = values.length > 0 ? [...new Set(values)].sort() : [];
 
         return {
           name: traitName,
-          title: traitTitleMap.get(traitName) || traitName, // Fallback to name if title not found
-          values: uniqueValues,
+          title: traitTitleMap.get(traitName) || traitName,
+          values: uniqueValues as string[],
         };
       });
 

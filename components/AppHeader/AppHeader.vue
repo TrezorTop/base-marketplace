@@ -11,9 +11,9 @@
             <NuxtLink to="/" class="hover:text-primary transition-colors">Home</NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/products" class="hover:text-primary transition-colors"
-              >Products</NuxtLink
-            >
+            <NuxtLink to="/products" class="hover:text-primary transition-colors">
+              Products
+            </NuxtLink>
           </li>
         </ul>
       </nav>
