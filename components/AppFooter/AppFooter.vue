@@ -8,87 +8,6 @@
             Your one-stop shop for all your needs.
           </p>
         </div>
-
-        <div>
-          <h3 class="font-bold mb-4">Shop</h3>
-          <ul class="space-y-2">
-            <li>
-              <NuxtLink
-                class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
-              >
-                All Products
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink
-                class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
-              >
-                Categories
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink
-                class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
-              >
-                Deals
-              </NuxtLink>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 class="font-bold mb-4">Company</h3>
-          <ul class="space-y-2">
-            <li>
-              <NuxtLink
-                class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
-              >
-                About Us
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink
-                class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
-              >
-                Contact
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink
-                class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
-              >
-                Careers
-              </NuxtLink>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 class="font-bold mb-4">Support</h3>
-          <ul class="space-y-2">
-            <li>
-              <NuxtLink
-                class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
-              >
-                Help Center
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink
-                class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
-              >
-                Privacy Policy
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink
-                class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
-              >
-                Terms of Service
-              </NuxtLink>
-            </li>
-          </ul>
-        </div>
       </div>
 
       <div
@@ -100,8 +19,4 @@
   </footer>
 </template>
 
-<script setup lang="ts">
-import { NuxtLink } from '#components'
-
-// Footer component for the marketplace app
-</script>
+<script setup lang="ts"></script>

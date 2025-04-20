@@ -8,15 +8,15 @@
       </div>
     </template>
     <div>
-      <h3 class="text-lg font-medium">Product</h3>
+      <h3 class="text-lg font-medium"><slot name="name" /></h3>
       <p class="text-gray-500 dark:text-gray-400 mt-1">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        <slot name="description" />
       </p>
     </div>
     <template #footer>
       <div class="flex items-center justify-between">
-        <span class="font-bold">${{ 19.99 }}</span>
-        <UButton size="sm" icon="i-heroicons-shopping-cart"> Add to Cart</UButton>
+        <span class="font-bold"><slot name="price"></slot></span>
+        <UButton size="sm" icon="i-heroicons-shopping-cart" class="cursor-pointer">Add to Cart</UButton>
       </div>
     </template>
   </UCard>

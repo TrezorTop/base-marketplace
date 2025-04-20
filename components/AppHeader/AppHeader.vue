@@ -11,7 +11,9 @@
             <NuxtLink to="/" class="hover:text-primary transition-colors">Home</NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/products" class="hover:text-primary transition-colors">Products</NuxtLink>
+            <NuxtLink to="/products" class="hover:text-primary transition-colors"
+              >Products</NuxtLink
+            >
           </li>
         </ul>
       </nav>
@@ -30,32 +32,32 @@
           aria-label="User account"
         />
 
-        <ClientOnly>
-          <UButton
-            :icon="isDark ? 'i-heroicons-sun' : 'i-heroicons-moon'"
-            color="neutral"
-            variant="ghost"
-            aria-label="Toggle color mode"
-            @click="isDark = !isDark"
-          />
-        </ClientOnly>
+        <!--        <ClientOnly>-->
+        <!--          <UButton-->
+        <!--            :icon="isDark ? 'i-heroicons-sun' : 'i-heroicons-moon'"-->
+        <!--            color="neutral"-->
+        <!--            variant="ghost"-->
+        <!--            aria-label="Toggle color mode"-->
+        <!--            @click="isDark = !isDark"-->
+        <!--          />-->
+        <!--        </ClientOnly>-->
       </div>
     </UContainer>
   </header>
 </template>
 
 <script setup lang="ts">
-import { NuxtLink } from '#components'
-import { computed, useColorMode } from '#imports'
+import { NuxtLink } from "#components";
+import { computed, useColorMode } from "#imports";
 
-const colorMode = useColorMode()
+const colorMode = useColorMode();
 
 const isDark = computed({
   get() {
-    return colorMode.value === 'dark'
+    return colorMode.value === "dark";
   },
   set(value) {
-    colorMode.preference = value ? 'dark' : 'light'
-  }
-})
+    colorMode.preference = value ? "dark" : "light";
+  },
+});
 </script>

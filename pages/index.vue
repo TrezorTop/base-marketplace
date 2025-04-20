@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import WhyChooseUs from '~/components/pages/index/WhyChooseUs/WhyChooseUs.vue'
-import Newsletter from '~/components/pages/index/Newsletter/Newsletter.vue'
-import FeaturedProducts from '~/components/pages/index/FeaturedProducts/FeaturedProducts.vue'
+import WhyChooseUs from "~/components/pages/index/WhyChooseUs/WhyChooseUs.vue";
+import Newsletter from "~/components/pages/index/Newsletter/Newsletter.vue";
+import FeaturedProducts from "~/components/pages/index/FeaturedProducts/FeaturedProducts.vue";
 
 useHead({
-  title: 'Home - Marketplace',
+  title: "Home - Marketplace",
   meta: [
     {
-      name: 'description',
-      content: 'Welcome to our marketplace. Browse our featured products and latest deals.'
-    }
-  ]
-})
+      name: "description",
+      content: "Welcome to our marketplace. Browse our featured products and latest deals.",
+    },
+  ],
+});
 </script>
 
 <template>
@@ -27,13 +27,11 @@ useHead({
 
     <h1 class="text-4xl font-bold mb-6">Welcome to Marketplace</h1>
 
-    <div class="flex flex-col gap-16">
-      <FeaturedProducts />
+    <FeaturedProducts class="mb-16" />
 
-      <WhyChooseUs />
+    <WhyChooseUs class="mb-16" />
 
-      <Newsletter />
-    </div>
+    <Newsletter class="mb-16" />
   </div>
 </template>
 
