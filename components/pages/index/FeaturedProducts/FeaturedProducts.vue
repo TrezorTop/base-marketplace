@@ -13,14 +13,15 @@ await callOnce(productsStore.getFeaturedProducts);
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <Product 
         v-for="product in productsStore.featuredProducts" 
-        :key="product.id"
         :id="product.id"
+        :image="product.image"
+        :key="product.id"
       >
         <template #name>{{ product.name }}</template>
 
         <template #description>{{ product.description }}</template>
 
-        <template #price>${{ product.price }}</template>
+        <template #price>${{ product.price.toFixed(2) }}</template>
       </Product>
     </div>
 

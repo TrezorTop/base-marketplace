@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useProductsStore } from "~/stores/products.store";
+import { useCartStore } from "~/stores/cart.store";
 
 const route = useRoute();
 const productsStore = useProductsStore();
+const cartStore = useCartStore();
 
 // Get the product ID from the route params
 const productId = route.params.id as string;
@@ -21,6 +23,23 @@ if (!product.value) {
   });
 }
 
+// Function to add the current product to the cart
+const addToCart = () => {
+  if (!product.value) {
+    console.error("Product not found");
+
+    return;
+  }
+
+  cartStore.addToCart(product.value.id);
+
+  useToast().add({
+    title: "Added to cart",
+    description: "Product has been added to your cart",
+    icon: "i-heroicons-check-circle",
+  });
+};
+
 // Set page title
 useHead({
   title: `${product.value.name} - Base Marketplace`,
@@ -31,26 +50,38 @@ useHead({
   <div v-if="product" class="container mx-auto py-8 px-4">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <div
-        class="bg-gray-100 dark:bg-gray-800 aspect-square flex items-center justify-center rounded-lg"
+        class="bg-gray-100 dark:bg-gray-800 aspect-square flex items-center justify-center rounded-lg overflow-hidden"
       >
-        <UIcon name="i-heroicons-photo" class="text-6xl text-gray-400" />
+        <template v-if="product.image">
+          <NuxtImg :src="`images/${product.image}`" class="object-cover w-full h-full" alt="" />
+        </template>
+        <template v-else>
+          <UIcon name="i-heroicons-photo" class="text-6xl text-gray-400" />
+        </template>
       </div>
 
       <div>
         <h1 class="text-3xl font-bold mb-2">{{ product.name }}</h1>
-        <p class="text-2xl font-bold text-primary mb-4">${{ product.price }}</p>
+        <p class="text-2xl font-bold text-primary mb-4">${{ product.price.toFixed(2) }}</p>
 
         <div class="mb-6">
           <h2 class="text-xl font-semibold mb-2">Description</h2>
           <p class="text-gray-600 dark:text-gray-300">{{ product.description }}</p>
         </div>
 
-        <div class="mb-6" v-if="product.categoryId">
+        <div v-if="product.categoryId" class="mb-6">
           <h2 class="text-xl font-semibold mb-2">Category</h2>
-          <UBadge color="primary">{{ product.category?.name || "Unknown Category" }}</UBadge>
+          <UBadge color="primary">{{ product.category?.title || "Unknown Category" }}</UBadge>
         </div>
 
-        <div class="mb-6" v-if="product.traits && typeof product.traits === 'object' && Object.keys(product.traits).length > 0">
+        <div
+          v-if="
+            product.traits &&
+            typeof product.traits === 'object' &&
+            Object.keys(product.traits).length > 0
+          "
+          class="mb-6"
+        >
           <h2 class="text-xl font-semibold mb-2">Specifications</h2>
           <div class="grid grid-cols-1 gap-2">
             <div v-for="(trait, key) in product.traits" :key="key" class="flex">
@@ -64,7 +95,8 @@ useHead({
           size="lg"
           color="primary"
           icon="i-heroicons-shopping-cart"
-          class="w-full md:w-auto"
+          class="w-full md:w-auto cursor-pointer"
+          @click="addToCart"
         >
           Add to Cart
         </UButton>

@@ -22,7 +22,7 @@ export default defineEventHandler(async (): Promise<FeaturedProductsResponse> =>
     });
 
     return {
-      products,
+      products: products as Product[],
     };
   } catch (error) {
     console.error("Error fetching featured products:", error);

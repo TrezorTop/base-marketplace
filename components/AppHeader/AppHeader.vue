@@ -19,10 +19,12 @@
       </nav>
       <div class="grid grid-cols-3 items-center gap-4">
         <UButton
+          to="/cart"
           icon="i-heroicons-shopping-cart"
           color="neutral"
           variant="ghost"
           aria-label="Shopping cart"
+          :trailing-color="cartItemCount > 0 ? 'primary' : undefined"
         />
 
         <UButton
@@ -49,8 +51,10 @@
 <script setup lang="ts">
 import { NuxtLink } from "#components";
 import { computed, useColorMode } from "#imports";
+import { useCartStore } from "~/stores/cart.store";
 
 const colorMode = useColorMode();
+const cartStore = useCartStore();
 
 const isDark = computed({
   get() {
@@ -60,4 +64,7 @@ const isDark = computed({
     colorMode.preference = value ? "dark" : "light";
   },
 });
+
+// Get the total number of items in the cart
+const cartItemCount = computed(() => cartStore.totalItems);
 </script>

@@ -1,6 +1,6 @@
 import { createError, defineEventHandler, readBody } from "h3";
 import db from "~/server/utils/db";
-import { Prisma } from "~/prisma/generated/prisma";
+import type { Prisma } from "~/prisma/generated/prisma";
 import type { Product } from "~/server/utils/types";
 
 export type ProductsResponse = {
@@ -13,6 +13,7 @@ export type ProductsFilter = {
     min?: number;
     max?: number;
   };
+  id?: string[];
   categoryId?: string[];
   traits?: {
     categoryId: string;
@@ -51,6 +52,13 @@ export default defineEventHandler(async (event): Promise<ProductsResponse> => {
       }
     }
 
+    // Filter by id
+    if (filter.id && filter.id.length > 0) {
+      where.id = {
+        in: filter.id,
+      };
+    }
+
     // Filter by categoryId
     if (filter.categoryId && filter.categoryId.length > 0) {
       where.categoryId = {
@@ -60,11 +68,32 @@ export default defineEventHandler(async (event): Promise<ProductsResponse> => {
 
     // Filter by traits
     if (filter.traits && filter.traits.length > 0) {
-      // For each trait, we need to check if the product's traits JSON contains the specified values
-      const traitFilters: Prisma.ProductWhereInput[] = [];
+      // Group traits by categoryId
+      const traitsByCategory: Record<string, Array<{ name: string; values: string[] }>> = {};
 
       for (const trait of filter.traits) {
         if (trait.values.length > 0) {
+          if (!traitsByCategory[trait.categoryId]) {
+            traitsByCategory[trait.categoryId] = [];
+          }
+          traitsByCategory[trait.categoryId].push({
+            name: trait.name,
+            values: trait.values,
+          });
+        }
+      }
+
+      // Create filters for each category
+      const categoryTraitFilters: Prisma.ProductWhereInput[] = [];
+
+      for (const [categoryId, traits] of Object.entries(traitsByCategory)) {
+        const categoryFilter: Prisma.ProductWhereInput = {
+          categoryId,
+          AND: [],
+        };
+
+        // Add each trait as an AND condition within this category
+        for (const trait of traits) {
           // Create a filter for each possible trait value (OR condition)
           const valueFilters = trait.values.map(value => ({
             traits: {
@@ -73,16 +102,41 @@ export default defineEventHandler(async (event): Promise<ProductsResponse> => {
             },
           }));
 
-          traitFilters.push({
-            AND: [{ categoryId: trait.categoryId }, { OR: valueFilters }],
-          });
+          (categoryFilter.AND as Prisma.ProductWhereInput[]).push({ OR: valueFilters });
         }
+
+        categoryTraitFilters.push(categoryFilter);
       }
 
-      // Combine all trait filters with AND (product must match all specified traits)
-      if (traitFilters.length > 0) {
-        where.AND = (where.AND as Prisma.ProductWhereInput[]) || [];
-        where.AND.push(...traitFilters);
+      // If we have category filters, add them to the where clause
+      if (categoryTraitFilters.length > 0) {
+        // If we already have a categoryId filter, we need to combine it with our trait filters
+        if (where.categoryId) {
+          // Create an OR condition that includes both:
+          // 1. Products that match our category-trait filters
+          // 2. Products that match the categoryId filter but don't have trait filters for that category
+          const categoryIds = Object.keys(traitsByCategory);
+          const categoriesWithoutTraits = (where.categoryId as Prisma.UuidFilter).in?.filter(
+            (id: string) => !categoryIds.includes(id),
+          );
+
+          const orConditions: Prisma.ProductWhereInput[] = [...categoryTraitFilters];
+
+          if (categoriesWithoutTraits?.length || 0 > 0) {
+            orConditions.push({
+              categoryId: {
+                in: categoriesWithoutTraits,
+              },
+            });
+          }
+
+          // Replace the categoryId filter with our OR condition
+          delete where.categoryId;
+          where.OR = orConditions;
+        } else {
+          // If no categoryId filter exists, just use OR for our category-trait filters
+          where.OR = categoryTraitFilters;
+        }
       }
     }
 
@@ -113,7 +167,7 @@ export default defineEventHandler(async (event): Promise<ProductsResponse> => {
     const total = await db.product.count({ where });
 
     return {
-      products,
+      products: products as Product[],
       total,
     };
   } catch (error) {

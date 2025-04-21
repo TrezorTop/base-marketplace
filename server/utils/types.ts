@@ -1,5 +1,3 @@
-import { Prisma } from "~/prisma/generated/prisma";
-
 export type TraitValue = string[];
 
 export type TraitDetails = {
@@ -30,7 +28,8 @@ export type Product = {
   description: string;
   price: number;
   categoryId: string;
-  traits: Prisma.JsonValue | Record<string, TraitDetails>;
+  traits: Record<string, TraitDetails>;
+  image?: string; // Optional image path or filename
 };
 
 export type ProductDetails = {
@@ -41,6 +40,7 @@ export type ProductDetails = {
   description: string;
   price: number;
   categoryId: string;
-  traits: Prisma.JsonValue | Record<string, TraitDetails>;
+  traits: Record<string, TraitDetails>;
+  image?: string; // Optional image path or filename
   category: Category;
 };

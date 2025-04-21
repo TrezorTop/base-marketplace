@@ -34,7 +34,7 @@ export default defineEventHandler(async (event): Promise<ProductResponse> => {
     }
 
     return {
-      product,
+      product: product as ProductDetails,
     };
   } catch (error) {
     console.error(`Error fetching product details:`, error);

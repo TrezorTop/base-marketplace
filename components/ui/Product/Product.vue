@@ -1,12 +1,29 @@
 <script setup lang="ts">
+import { useCartStore } from "~/stores/cart.store";
+
 type Props = {
   id: string;
+  image?: string; // Add optional image prop
 };
 
-const { id } = defineProps<Props>();
+const { id, image } = defineProps<Props>();
+
+const cartStore = useCartStore();
 
 const onProductClick = () => {
   navigateTo(`/products/${id}`);
+};
+
+const addToCart = (event: Event) => {
+  event.stopPropagation(); // Prevent navigation to product detail page
+
+  cartStore.addToCart(id);
+
+  useToast().add({
+    title: "Added to cart",
+    description: "Product has been added to your cart",
+    icon: "i-heroicons-check-circle",
+  });
 };
 </script>
 
@@ -20,7 +37,12 @@ const onProductClick = () => {
   >
     <template #header>
       <div class="aspect-video bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-        <UIcon name="i-heroicons-photo" class="text-4xl text-gray-400" />
+        <template v-if="image">
+          <NuxtImg :src="`images/${image}`" class="object-cover w-full h-full" alt="" />
+        </template>
+        <template v-else>
+          <UIcon name="i-heroicons-photo" class="text-4xl text-gray-400" />
+        </template>
       </div>
     </template>
 
@@ -31,8 +53,13 @@ const onProductClick = () => {
 
     <template #footer>
       <div class="flex items-center justify-between">
-        <span class="font-bold"><slot name="price"></slot></span>
-        <UButton size="sm" icon="i-heroicons-shopping-cart" class="cursor-pointer">
+        <span class="font-bold"><slot name="price" /></span>
+        <UButton
+          size="sm"
+          icon="i-heroicons-shopping-cart"
+          class="cursor-pointer"
+          @click="addToCart"
+        >
           Add to Cart
         </UButton>
       </div>

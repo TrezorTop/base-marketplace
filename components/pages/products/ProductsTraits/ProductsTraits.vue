@@ -8,7 +8,7 @@ const categoriesStore = useCategoriesStore();
 
 // Function to get category IDs from selected category names
 const getSelectedCategoryIds = () => {
-  if (categoriesStore.selectedCategories.length === 0) {
+  if (!categoriesStore.selectedCategories.length) {
     return [];
   }
 
@@ -51,7 +51,7 @@ const handleTraitValueChange = (categoryId: string, traitName: string, values: s
     trait => trait.categoryId === categoryId && trait.name === traitName,
   );
 
-  if (values.length === 0) {
+  if (!values.length) {
     // If no values selected, remove the trait if it exists
     if (traitIndex !== -1) {
       productsStore.selectedTraits.splice(traitIndex, 1);

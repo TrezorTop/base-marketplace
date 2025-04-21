@@ -26,7 +26,7 @@ export default defineEventHandler(async (event): Promise<TraitsResponse> => {
     const categoryIds = body.categoryIds || [];
 
     // If no category IDs provided, return empty response
-    if (categoryIds.length === 0) {
+    if (!categoryIds.length) {
       return { traits: [] };
     }
 

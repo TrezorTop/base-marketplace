@@ -1,7 +1,7 @@
 import type { ProductsFilter, ProductsResponse } from "~/server/api/products.post";
 import type { CategoryTrait, TraitsResponse } from "~/server/api/products/traits/index.post";
 import { useCategoriesStore } from "~/stores/categories.store";
-import { type Product, type ProductDetails } from "~/server/utils/types";
+import type { Product, ProductDetails } from "~/server/utils/types";
 import type { FeaturedProductsResponse } from "~/server/api/products/featured/index.get";
 import type { ProductResponse } from "~/server/api/products/[id]/index.get";
 
@@ -23,14 +23,6 @@ export const useProductsStore = defineStore("products", () => {
   const categoriesStore = useCategoriesStore();
 
   const getProducts = async (filter?: ProductsFilter) => {
-    // If filter is undefined and no other filters are applied, fetch all products without filtering
-    const noFiltersApplied =
-      !filter &&
-      priceRange.value.min === undefined &&
-      priceRange.value.max === undefined &&
-      categoriesStore.selectedCategories.length === 0 &&
-      selectedTraits.value.length === 0;
-
     // Build filter object for requests
     const filterToApply: ProductsFilter = filter || {};
 
@@ -74,7 +66,7 @@ export const useProductsStore = defineStore("products", () => {
 
   const getTraits = async (categoryIds?: string[]) => {
     // Only fetch traits if categoryIds are provided
-    if (!categoryIds || categoryIds.length === 0) {
+    if (!categoryIds || !categoryIds.length) {
       traits.value = [];
       return { traits: [] };
     }
@@ -123,7 +115,7 @@ export const useProductsStore = defineStore("products", () => {
         selectedTraits.value[traitIndex].values.splice(valueIndex, 1);
 
         // If no values left, remove the trait
-        if (selectedTraits.value[traitIndex].values.length === 0) {
+        if (!selectedTraits.value[traitIndex].values.length) {
           selectedTraits.value.splice(traitIndex, 1);
         }
       }

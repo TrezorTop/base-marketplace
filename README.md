@@ -1,75 +1,41 @@
-# Nuxt Minimal Starter
+# Base Marketplace
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A modern e-commerce marketplace platform built with Nuxt.js and Vue.js that allows users to browse products, add them to cart, and process payments.
 
-## Setup
+## Running the Project
 
-Make sure to install dependencies:
+### Local Development
 
+1. Start the local database:
+   ```bash
+   docker-compose -f docker-compose.local-database.yml up -d
+   ```
+
+2. Install dependencies:
+   ```bash
+   pnpm i
+   ```
+
+3. Apply database migrations:
+   ```bash
+   pnpx prisma migrate deploy
+   ```
+
+4. Start the development server:
+   ```bash
+   pnpm dev
+   ```
+
+The application will be available at http://localhost:3000.
+
+### Docker Deployment
+
+For staging environment:
 ```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
+docker-compose -f docker-compose.staging.yml up -d --build
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
+For production environment:
 ```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+docker-compose -f docker-compose.production.yml up -d --build
 ```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
