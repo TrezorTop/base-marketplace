@@ -1,10 +1,53 @@
 <script setup lang="ts">
 import { useCategoriesStore } from "~/stores/categories.store";
-import { watchDebounced } from "#imports";
+import { useProductsStore } from "~/stores/products.store";
 import { FETCH_DEBOUNCE } from "~/consts/fetch-debounce";
 
 const productsStore = useProductsStore();
 const categoriesStore = useCategoriesStore();
+
+enum SortingOptions {
+  Nothing = "Nothing",
+  PriceAsc = "PriceAsc",
+  PriceDesc = "PriceDesc",
+  NameAsc = "NameAsc",
+  NameDesc = "NameDesc",
+  Newest = "Newest",
+  Oldest = "Oldest",
+}
+
+const sortOptionsMap: Record<
+  SortingOptions,
+  { field: string | null; direction: "asc" | "desc" | null }
+> = {
+  [SortingOptions.Nothing]: { field: null, direction: null },
+  [SortingOptions.PriceAsc]: { field: "price", direction: "asc" },
+  [SortingOptions.PriceDesc]: { field: "price", direction: "desc" },
+  [SortingOptions.NameAsc]: { field: "name", direction: "asc" },
+  [SortingOptions.NameDesc]: { field: "name", direction: "desc" },
+  [SortingOptions.Newest]: { field: "createdAt", direction: "desc" },
+  [SortingOptions.Oldest]: { field: "createdAt", direction: "asc" },
+};
+
+const sortOptions = [
+  { label: "Nothing", value: SortingOptions.Nothing },
+  { label: "Price: Low to High", value: SortingOptions.PriceAsc },
+  { label: "Price: High to Low", value: SortingOptions.PriceDesc },
+  { label: "Name: A to Z", value: SortingOptions.NameAsc },
+  { label: "Name: Z to A", value: SortingOptions.NameDesc },
+  { label: "Newest", value: SortingOptions.Newest },
+  { label: "Oldest", value: SortingOptions.Oldest },
+];
+
+// Handle sort change
+const handleSortChange = (option: SortingOptions) => {
+  if (option) {
+    const sortMapping = sortOptionsMap[option];
+    productsStore.setSorting(sortMapping.field, sortMapping.direction);
+  }
+};
+
+const currentSortOption = ref<SortingOptions | undefined>();
 
 // Function to get category IDs from selected category names
 const getSelectedCategoryIds = () => {
@@ -28,7 +71,6 @@ watchDebounced(
   { immediate: true, debounce: FETCH_DEBOUNCE },
 );
 
-// Price range filter
 const minPrice = ref<number | undefined>();
 const maxPrice = ref<number | undefined>();
 
@@ -73,12 +115,31 @@ const handleTraitValueChange = (categoryId: string, traitName: string, values: s
 <template>
   <div>
     <div class="mb-6">
-      <h3 class="text-lg font-medium mb-2">Price Range</h3>
-      <div class="flex items-center gap-2">
-        <UInput v-model="minPrice" type="number" placeholder="Min" class="w-24" />
-        <span>to</span>
-        <UInput v-model="maxPrice" type="number" placeholder="Max" class="w-24" />
-        <UButton size="sm" @click="applyPriceFilter">Apply</UButton>
+      <div class="flex justify-between items-center">
+        <div>
+          <h3 class="text-lg font-medium mb-2">Price Range</h3>
+
+          <div class="flex items-center gap-2">
+            <UInput v-model="minPrice" type="number" placeholder="Min" class="w-24" />
+            <span>to</span>
+            <UInput v-model="maxPrice" type="number" placeholder="Max" class="w-24" />
+            <UButton size="sm" @click="applyPriceFilter">Apply</UButton>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-medium mb-2">Sort By</h3>
+          <USelect
+            :items="sortOptions"
+            placeholder="Select sorting"
+            :model-value="currentSortOption"
+            class="w-48"
+            :content="{
+              bodyLock: false,
+            }"
+            @update:model-value="handleSortChange($event)"
+          />
+        </div>
       </div>
     </div>
 
@@ -98,16 +159,18 @@ const handleTraitValueChange = (categoryId: string, traitName: string, values: s
               :items="trait.values"
               multiple
               placeholder="Select values"
+              :model-value="getSelectedValues(categoryTrait.category.id, trait.name)"
+              :content="{
+                bodyLock: false,
+              }"
               @update:model-value="
                 handleTraitValueChange(categoryTrait.category.id, trait.name, $event)
               "
-              :model-value="getSelectedValues(categoryTrait.category.id, trait.name)"
             />
           </div>
         </div>
       </div>
     </template>
-
 
     <div v-else class="mb-6 text-gray-500">
       Please select at least one category to see available traits.

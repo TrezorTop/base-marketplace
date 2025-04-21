@@ -17,9 +17,9 @@ const noProducts = computed(() => !productsStore.products.length);
     </div>
 
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <Product 
-        v-for="product in productsStore.products" 
-        :id="product.id" 
+      <Product
+        v-for="product in productsStore.products"
+        :id="product.id"
         :key="product.id"
         :image="product.image"
       >

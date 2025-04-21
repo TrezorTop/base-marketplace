@@ -29,7 +29,7 @@ export type Product = {
   price: number;
   categoryId: string;
   traits: Record<string, TraitDetails>;
-  image?: string; // Optional image path or filename
+  image?: string;
 };
 
 export type ProductDetails = {
@@ -41,6 +41,6 @@ export type ProductDetails = {
   price: number;
   categoryId: string;
   traits: Record<string, TraitDetails>;
-  image?: string; // Optional image path or filename
+  image?: string;
   category: Category;
 };

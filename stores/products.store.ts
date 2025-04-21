@@ -18,6 +18,7 @@ export const useProductsStore = defineStore("products", () => {
   const currentPage = ref(1);
   const totalProducts = ref(0);
   const itemsPerPage = 12;
+  const sortOption = ref<{ field: string; direction: "asc" | "desc" } | null>(null);
 
   // Get selected categories from categories store
   const categoriesStore = useCategoriesStore();
@@ -48,6 +49,11 @@ export const useProductsStore = defineStore("products", () => {
     // Add traits filter if traits are selected
     if (selectedTraits.value.length > 0) {
       filterToApply.traits = selectedTraits.value;
+    }
+
+    // Add sorting if set
+    if (sortOption.value) {
+      filterToApply.sort = sortOption.value;
     }
 
     const response = await api<ProductsResponse>("/api/products", {
@@ -131,6 +137,17 @@ export const useProductsStore = defineStore("products", () => {
     await getProducts({ page });
   };
 
+  // Method to set the sorting option and fetch products
+  const setSorting = async (field: string | null, direction: "asc" | "desc" | null) => {
+    if (!field || !direction) {
+      sortOption.value = null;
+
+      return;
+    }
+
+    sortOption.value = { field, direction };
+  };
+
   const featuredProducts = ref<Product[]>([]);
 
   const getFeaturedProducts = async () => {
@@ -168,6 +185,9 @@ export const useProductsStore = defineStore("products", () => {
     totalProducts,
     itemsPerPage,
     setPage,
+
+    sortOption,
+    setSorting,
 
     featuredProducts,
     getFeaturedProducts,

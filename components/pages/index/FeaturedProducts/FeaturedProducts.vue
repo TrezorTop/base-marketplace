@@ -11,8 +11,8 @@ await callOnce(productsStore.getFeaturedProducts);
     <h2 class="text-2xl font-semibold mb-4">Featured Products</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <Product 
-        v-for="product in productsStore.featuredProducts" 
+      <Product
+        v-for="product in productsStore.featuredProducts"
         :id="product.id"
         :image="product.image"
         :key="product.id"

@@ -7,16 +7,19 @@ A modern e-commerce marketplace platform built with Nuxt.js and Vue.js that allo
 ### Local Development
 
 1. Start the local database:
+
    ```bash
    docker-compose -f docker-compose.local-database.yml up -d
    ```
 
 2. Install dependencies:
+
    ```bash
    pnpm i
    ```
 
 3. Apply database migrations:
+
    ```bash
    pnpx prisma migrate deploy
    ```
@@ -31,11 +34,13 @@ The application will be available at http://localhost:3000.
 ### Docker Deployment
 
 For staging environment:
+
 ```bash
 docker-compose -f docker-compose.staging.yml up -d --build
 ```
 
 For production environment:
+
 ```bash
 docker-compose -f docker-compose.production.yml up -d --build
 ```

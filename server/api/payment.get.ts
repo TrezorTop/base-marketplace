@@ -7,8 +7,8 @@ export type PaymentResponse = {
 
 export default defineEventHandler(async (): Promise<PaymentResponse> => {
   // Wait for 5 seconds to mock payment processing
-  await new Promise((resolve) => setTimeout(resolve, 2500));
-  
+  await new Promise(resolve => setTimeout(resolve, 5000));
+
   // Return success response
   return {
     success: true,

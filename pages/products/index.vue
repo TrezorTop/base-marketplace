@@ -35,6 +35,7 @@ watchDebounced(
   [
     () => productsStore.priceRange,
     () => productsStore.selectedTraits,
+    () => productsStore.sortOption,
     () => categoriesStore.selectedCategories,
   ],
   () => {

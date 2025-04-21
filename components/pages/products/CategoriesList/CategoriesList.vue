@@ -9,7 +9,7 @@ const onCategorySelect = (category: string) => {
   if (categoriesStore.selectedCategoriesMap[category]) {
     categoriesStore.selectedCategories.splice(
       categoriesStore.selectedCategories.indexOf(category),
-      1
+      1,
     );
   } else {
     categoriesStore.selectedCategories.push(category);
