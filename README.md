@@ -1,6 +1,6 @@
 # Base Marketplace
 
-A modern e-commerce marketplace platform built with Nuxt.js and Vue.js that allows users to browse products, add them to cart, and process payments.
+A modern e-commerce marketplace platform built with Nuxt.js and Posgresql that allows users to browse products, add them to cart, and process payments.
 
 <p align="center">
   <img width="700" src="readme/lighthouse.png">
