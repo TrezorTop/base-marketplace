@@ -2,6 +2,8 @@
 
 A modern e-commerce marketplace platform built with Nuxt.js and Vue.js that allows users to browse products, add them to cart, and process payments.
 
+![lighthouse.png](readme/lighthouse.png){style="display: block; margin: 0 auto; width: 300px;"}
+
 ## Running the Project
 
 ### Local Development
