@@ -48,3 +48,5 @@ For production environment:
 ```bash
 docker-compose -f docker-compose.production.yml up -d --build
 ```
+
+Both environments bind to http://localhost:3000.
